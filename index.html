@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>炒股学堂 · 股票技术分析刷题训练营</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0c10;--bg2:#12151c;--bg3:#1a1e28;--bg4:#222736;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--border3:rgba(255,255,255,0.18);--text:#dde1ed;--text2:#7e8299;--text3:#454858;--accent:#f5c842;--accent2:#d4a017;--accent-bg:rgba(245,200,66,0.08);--accent-border:rgba(245,200,66,0.22);--green:#34d399;--green-bg:rgba(52,211,153,0.08);--green-border:rgba(52,211,153,0.25);--red:#f87171;--red-bg:rgba(248,113,113,0.08);--red-border:rgba(248,113,113,0.25);--blue:#60a5fa;--blue-bg:rgba(96,165,250,0.08);--blue-border:rgba(96,165,250,0.2);--purple:#a78bfa;--purple-bg:rgba(167,139,250,0.08);--orange:#fb923c;--r:10px;--r-sm:7px;--r-lg:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:99px;}
+#authOverlay{position:fixed;inset:0;background:rgba(10,12,16,0.97);z-index:1000;display:flex;align-items:center;justify-content:center;}
+.auth-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-lg);padding:40px;width:380px;max-width:90vw;}
+.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.auth-logo-icon{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#0a0c10;}
+.auth-logo-text{font-size:18px;font-weight:700;color:var(--accent);}
+.auth-title{font-size:20px;font-weight:700;margin-bottom:6px;}
+.auth-sub{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
+.auth-label{font-size:12px;color:var(--text2);margin-bottom:6px;display:block;}
+.auth-phone-wrap{display:flex;gap:8px;margin-bottom:14px;}
+.auth-prefix{padding:0 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:13px;color:var(--text2);display:flex;align-items:center;white-space:nowrap;font-family:'DM Mono',monospace;}
+.auth-input{width:100%;padding:0 14px;height:42px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:14px;color:var(--text);outline:none;font-family:'Noto Sans SC',sans-serif;transition:border-color .2s;}
+.auth-input:focus{border-color:var(--accent);}
+.auth-code-wrap{display:flex;gap:8px;margin-bottom:20px;}
+.auth-code-wrap .auth-input{flex:1;}
+.send-btn{padding:0 14px;height:42px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:12px;color:var(--accent);cursor:pointer;white-space:nowrap;font-family:'Noto Sans SC',sans-serif;transition:all .2s;}
+.send-btn:hover{background:var(--accent-bg);}
+.send-btn:disabled{color:var(--text3);cursor:default;}
+.auth-btn{width:100%;height:44px;background:var(--accent);border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;color:#0a0c10;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:background .2s;letter-spacing:.04em;}
+.auth-btn:hover{background:var(--accent2);}
+.auth-hint{font-size:11px;color:var(--text3);text-align:center;margin-top:14px;line-height:1.7;}
+.auth-demo-hint{font-size:12px;color:var(--accent);text-align:center;margin-top:10px;padding:9px;background:var(--accent-bg);border-radius:var(--r-sm);border:1px solid var(--accent-border);}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:54px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+.nav-logo{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.nav-logo-icon{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#0a0c10;}
+.nav-logo-text{font-size:15px;font-weight:700;color:var(--accent);}
+.nav-tabs{display:flex;gap:2px;}
+.nav-tab{padding:6px 13px;border-radius:var(--r-sm);font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;font-family:'Noto Sans SC',sans-serif;transition:all .2s;white-space:nowrap;}
+.nav-tab:hover{color:var(--text);background:var(--bg3);}
+.nav-tab.active{color:var(--accent);background:var(--accent-bg);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-streak{font-size:12px;color:var(--accent);background:var(--accent-bg);border:1px solid var(--accent-border);padding:4px 10px;border-radius:99px;}
+.nav-avatar{width:28px;height:28px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);font-weight:700;}
+.nav-user{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text2);}
+.page{display:none;}.page.active{display:block;}
+.home-wrap{max-width:960px;margin:0 auto;padding:28px 20px;}
+.market-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-lg);padding:22px 26px;margin-bottom:24px;position:relative;overflow:hidden;}
+.market-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);}
+.market-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.market-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;}
+.market-date{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:3px;}
+.market-indices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.index-box{background:var(--bg3);border-radius:var(--r-sm);padding:12px 14px;border:1px solid var(--border);}
+.index-name{font-size:11px;color:var(--text2);margin-bottom:4px;}
+.index-val{font-size:18px;font-weight:700;font-family:'DM Mono',monospace;}
+.index-chg{font-size:12px;font-family:'DM Mono',monospace;margin-top:2px;}
+.up{color:#f87171;}.down{color:#34d399;}
+.signals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.signal-box{background:var(--bg3);border-radius:var(--r-sm);padding:10px;border:1px solid var(--border);text-align:center;}
+.signal-name{font-size:10px;color:var(--text2);margin-bottom:5px;}
+.signal-val{font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;display:inline-block;}
+.sig-bull{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.2);}
+.sig-bear{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.2);}
+.sig-neut{background:var(--bg4);color:var(--text2);border:1px solid var(--border2);}
+.market-disclaimer{font-size:11px;color:var(--text3);line-height:1.7;padding:9px 12px;background:var(--bg3);border-radius:var(--r-sm);border:1px solid var(--border);}
+.modules-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;}
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:10px;margin-bottom:24px;}
+.module-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .2s;position:relative;}
+.module-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.module-tag{font-size:10px;font-weight:700;letter-spacing:.05em;padding:2px 8px;border-radius:99px;display:inline-block;margin-bottom:8px;}
+.module-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.module-desc{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:10px;}
+.module-meta{display:flex;justify-content:space-between;align-items:center;}
+.module-count{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+.module-progress{font-size:11px;font-weight:500;}
+.module-bar{height:3px;background:var(--bg4);border-radius:99px;margin-top:7px;overflow:hidden;}
+.module-bar-fill{height:100%;border-radius:99px;transition:width 1s ease;}
+.quiz-wrap{max-width:700px;margin:0 auto;padding:24px 20px;}
+.quiz-back{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer;margin-bottom:16px;width:fit-content;padding:5px 10px;border-radius:var(--r-sm);transition:all .2s;}
+.quiz-back:hover{background:var(--bg3);color:var(--text);}
+.quiz-mod-header{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.quiz-mod-title{font-size:15px;font-weight:700;}
+.quiz-hbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.quiz-prog-wrap{flex:1;height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;}
+.quiz-prog-fill{height:100%;background:var(--accent);border-radius:99px;transition:width .4s ease;}
+.quiz-cnt{font-size:12px;color:var(--text2);font-family:'DM Mono',monospace;white-space:nowrap;}
+.sm2-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.sm2-chip{font-size:11px;padding:3px 9px;border-radius:99px;font-family:'DM Mono',monospace;font-weight:500;}
+.q-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:22px;margin-bottom:14px;position:relative;overflow:hidden;}
+.q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent) 0%,transparent 60%);}
+.q-diff{font-size:11px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.diff-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.q-text{font-size:15px;line-height:1.8;color:var(--text);font-weight:500;}
+.mini-chart-wrap{margin-top:12px;padding:10px 12px;background:var(--bg3);border-radius:var(--r-sm);border:1px solid var(--border);}
+.mini-chart-label{font-size:10px;color:var(--text3);margin-bottom:7px;font-family:'DM Mono',monospace;}
+.mini-chart{display:flex;align-items:flex-end;gap:3px;height:48px;}
+.mini-bar{border-radius:2px 2px 0 0;flex:1;}
+.opts{display:flex;flex-direction:column;gap:7px;}
+.opt-btn{display:flex;align-items:flex-start;gap:10px;padding:12px 15px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:all .2s;text-align:left;width:100%;font-family:'Noto Sans SC',sans-serif;}
+.opt-btn:hover:not(:disabled){border-color:var(--border2);background:var(--bg4);}
+.opt-label{width:22px;height:22px;border-radius:5px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text2);flex-shrink:0;font-family:'DM Mono',monospace;transition:all .2s;}
+.opt-text{font-size:13px;color:var(--text2);line-height:1.55;padding-top:2px;transition:color .2s;}
+.opt-btn.correct{border-color:var(--green);background:var(--green-bg);}
+.opt-btn.correct .opt-label{background:var(--green);color:#0a0c10;}
+.opt-btn.correct .opt-text{color:var(--green);}
+.opt-btn.wrong{border-color:var(--red);background:var(--red-bg);}
+.opt-btn.wrong .opt-label{background:var(--red);color:#0a0c10;}
+.opt-btn.wrong .opt-text{color:var(--red);}
+.opt-btn:disabled{cursor:default;}
+.feedback-box{margin-top:12px;padding:13px 16px;border-radius:var(--r-sm);font-size:13px;line-height:1.75;display:none;}
+.feedback-box.correct{background:var(--green-bg);border:1px solid var(--green-border);color:#6ee7b7;}
+.feedback-box.wrong{background:var(--red-bg);border:1px solid var(--red-border);color:#fca5a5;}
+.fb-title{font-weight:700;font-size:13px;margin-bottom:4px;}
+.next-btn{margin-top:14px;width:100%;padding:12px;background:var(--accent);color:#0a0c10;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:background .2s;display:none;letter-spacing:.03em;}
+.next-btn:hover{background:var(--accent2);}
+.complete-wrap{text-align:center;padding:48px 20px;}
+.complete-icon{width:72px;height:72px;border-radius:50%;background:var(--accent-bg);border:2px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.complete-title{font-size:22px;font-weight:700;margin-bottom:8px;}
+.complete-sub{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.7;}
+.complete-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:360px;margin:0 auto 20px;}
+.cs{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;}
+.cs-v{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;}
+.cs-l{font-size:11px;color:var(--text3);margin-top:4px;}
+.restart-btn{padding:11px 26px;background:var(--accent);color:#0a0c10;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:background .2s;margin-right:8px;}
+.restart-btn:hover{background:var(--accent2);}
+.back-home-btn{padding:11px 26px;background:var(--bg3);color:var(--text2);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:14px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all .2s;}
+.back-home-btn:hover{color:var(--text);}
+.stats-wrap{max-width:860px;margin:0 auto;padding:28px 20px;}
+.stats-top{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;}
+.stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;}
+.stat-val{font-size:26px;font-weight:700;font-family:'DM Mono',monospace;}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+.stat-card.hi{border-color:var(--accent-border);background:var(--accent-bg);}
+.stat-card.hi .stat-val{color:var(--accent);}
+.sec-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+.cat-row{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 15px;}
+.cat-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.cat-name{font-size:13px;font-weight:500;}
+.cat-pct{font-size:12px;color:var(--text2);font-family:'DM Mono',monospace;}
+.cat-bar-bg{height:3px;background:var(--bg4);border-radius:99px;overflow:hidden;}
+.cat-bar-fill{height:100%;border-radius:99px;transition:width 1s ease;}
+.heatmap{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-bottom:22px;}
+.hm-cell{aspect-ratio:1;border-radius:2px;background:var(--bg3);}
+.hm-d1{background:rgba(245,200,66,.15);}.hm-d2{background:rgba(245,200,66,.35);}.hm-d3{background:rgba(245,200,66,.6);}.hm-d4{background:var(--accent);}
+.comm-wrap{max-width:860px;margin:0 auto;padding:28px 20px;}
+.comm-layout{display:grid;grid-template-columns:1fr 268px;gap:14px;align-items:start;}
+.post-compose{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:12px;}
+.post-compose-top{display:flex;gap:9px;margin-bottom:9px;}
+.compose-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--accent);font-weight:700;flex-shrink:0;}
+.compose-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);padding:8px 12px;font-size:13px;color:var(--text);font-family:'Noto Sans SC',sans-serif;resize:none;outline:none;min-height:66px;transition:border-color .2s;}
+.compose-input:focus{border-color:var(--accent);}
+.compose-bottom{display:flex;justify-content:space-between;align-items:center;}
+.compose-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.compose-tag-btn{padding:3px 9px;background:var(--bg3);border:1px solid var(--border2);border-radius:99px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .2s;font-family:'Noto Sans SC',sans-serif;}
+.compose-tag-btn:hover{border-color:var(--accent-border);color:var(--accent);}
+.post-btn{padding:6px 14px;background:var(--accent);color:#0a0c10;border:none;border-radius:var(--r-sm);font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans SC',sans-serif;flex-shrink:0;}
+.post-list{display:flex;flex-direction:column;gap:9px;}
+.post-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;transition:border-color .2s;cursor:pointer;}
+.post-card:hover{border-color:var(--border2);}
+.post-top{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.post-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.post-meta{flex:1;}
+.post-author{font-size:13px;font-weight:500;color:var(--text);}
+.post-time{font-size:11px;color:var(--text3);}
+.post-tag{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:500;}
+.post-content{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:10px;}
+.post-bottom{display:flex;align-items:center;gap:14px;}
+.post-action{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text3);cursor:pointer;transition:color .2s;}
+.post-action:hover{color:var(--accent);}
+.comm-sidebar{display:flex;flex-direction:column;gap:10px;}
+.sidebar-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;}
+.sidebar-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.hot-topic{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.hot-topic:last-child{border-bottom:none;padding-bottom:0;}
+.hot-num{width:16px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);flex-shrink:0;text-align:center;}
+.hot-num.top{color:var(--accent);}
+.hot-text{font-size:12px;color:var(--text2);flex:1;line-height:1.4;}
+.leaderboard-row{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid var(--border);}
+.leaderboard-row:last-child{border-bottom:none;}
+.lb-rank{width:16px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);text-align:center;flex-shrink:0;}
+.lb-rank.g{color:var(--accent);}
+.lb-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.lb-name{font-size:12px;color:var(--text);flex:1;}
+.lb-score{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;}
+.wrong-wrap{max-width:700px;margin:0 auto;padding:24px 20px;}
+.filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.filter-btn{padding:4px 11px;border-radius:99px;font-size:12px;border:1px solid var(--border2);background:none;color:var(--text2);cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all .2s;}
+.filter-btn.active,.filter-btn:hover{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent);}
+.wrong-list{display:flex;flex-direction:column;gap:9px;}
+.wrong-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:border-color .2s;}
+.wrong-item:hover{border-color:var(--border2);}
+.wrong-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;gap:12px;}
+.wrong-q{font-size:13px;color:var(--text);line-height:1.65;flex:1;}
+.wrong-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.wrong-badge{font-size:10px;color:var(--red);background:var(--red-bg);padding:2px 7px;border-radius:99px;border:1px solid var(--red-border);}
+.wrong-next{font-size:10px;color:var(--text3);}
+.wrong-answer{font-size:12px;color:var(--green);background:var(--green-bg);padding:8px 12px;border-radius:var(--r-sm);margin-top:6px;border:1px solid var(--green-border);display:none;line-height:1.65;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--border2);padding:8px 18px;border-radius:99px;font-size:13px;color:var(--text2);transition:transform .3s ease;z-index:999;white-space:nowrap;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+@keyframes popIn{0%{transform:scale(.75);opacity:0}70%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+.pop{animation:popIn .3s ease forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .35s ease forwards;}
+</style>
+</head>
+<body>
+<div id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-logo"><div class="auth-logo-icon">K</div><span class="auth-logo-text">炒股学堂</span></div>
+    <div class="auth-title">登录 / 注册</div>
+    <div class="auth-sub">用手机号一键登录，开启技术分析学习之旅</div>
+    <label class="auth-label">手机号码</label>
+    <div class="auth-phone-wrap">
+      <span class="auth-prefix">🇨🇳 +86</span>
+      <input class="auth-input" id="phoneInput" type="tel" placeholder="请输入手机号" maxlength="11">
+    </div>
+    <label class="auth-label">验证码</label>
+    <div class="auth-code-wrap">
+      <input class="auth-input" id="codeInput" type="text" placeholder="6位验证码" maxlength="6">
+      <button class="send-btn" id="sendBtn" onclick="sendCode()">发送验证码</button>
+    </div>
+    <button class="auth-btn" onclick="doLogin()">登录 / 注册</button>
+    <div class="auth-demo-hint">Demo模式：输入任意手机号，点击发送，输入任意6位数字即可</div>
+    <div class="auth-hint">登录即同意《用户协议》及《隐私政策》</div>
+  </div>
+</div>
+<nav class="nav">
+  <div class="nav-logo" onclick="showPage('home')"><div class="nav-logo-icon">K</div><span class="nav-logo-text">炒股学堂</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-home" onclick="showPage('home')">首页</button>
+    <button class="nav-tab" id="tab-stats" onclick="showPage('stats')">学习统计</button>
+    <button class="nav-tab" id="tab-community" onclick="showPage('community')">社区</button>
+    <button class="nav-tab" id="tab-wrong" onclick="showPage('wrong')">错题本</button>
+  </div>
+  <div class="nav-right">
+    <div class="nav-streak">🔥 连续 3 天</div>
+    <div class="nav-user"><div class="nav-avatar" id="navAvatar">学</div><span id="navPhone" style="font-size:13px;color:var(--text2);">未登录</span></div>
+  </div>
+</nav>
+<div id="page-home" class="page active">
+  <div class="home-wrap">
+    <div class="market-card fade-up">
+      <div class="market-top">
+        <div><div class="market-title">今日 A 股技术面信号</div><div class="market-date" id="marketDate"></div></div>
+        <div style="font-size:11px;color:var(--text3);text-align:right;line-height:1.6;">技术面参考数据<br>不构成投资建议</div>
+      </div>
+      <div class="market-indices">
+        <div class="index-box"><div class="index-name">上证指数</div><div class="index-val up">3,321.18</div><div class="index-chg up">▲ 0.73%</div></div>
+        <div class="index-box"><div class="index-name">深证成指</div><div class="index-val up">10,542.36</div><div class="index-chg up">▲ 1.12%</div></div>
+        <div class="index-box"><div class="index-name">创业板指</div><div class="index-val down">2,088.74</div><div class="index-chg down">▼ 0.28%</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:500;">主要技术指标信号（上证）</div>
+      <div class="signals-grid">
+        <div class="signal-box"><div class="signal-name">MACD</div><div class="signal-val sig-bull">多头</div></div>
+        <div class="signal-box"><div class="signal-name">KDJ</div><div class="signal-val sig-neut">中性</div></div>
+        <div class="signal-box"><div class="signal-name">均线</div><div class="signal-val sig-bull">多头排列</div></div>
+        <div class="signal-box"><div class="signal-name">BOLL</div><div class="signal-val sig-bull">上轨运行</div></div>
+        <div class="signal-box"><div class="signal-name">RSI(14)</div><div class="signal-val sig-neut">58.3</div></div>
+        <div class="signal-box"><div class="signal-name">成交量</div><div class="signal-val sig-bull">温和放量</div></div>
+        <div class="signal-box"><div class="signal-name">委比</div><div class="signal-val sig-bull">+18%</div></div>
+        <div class="signal-box"><div class="signal-name">综合判断</div><div class="signal-val sig-bull">偏多</div></div>
+      </div>
+      <div class="market-disclaimer">⚠️ 以上为技术面指标客观展示，仅供学习参考。股票投资有风险，技术分析不能保证未来走势，请勿据此做出投资决策。</div>
+    </div>
+    <div class="modules-title">选择学习模块 · 共 <span id="totalQCount">0</span> 道题</div>
+    <div class="modules-grid" id="modulesGrid"></div>
+  </div>
+</div>
+<div id="page-quiz" class="page">
+  <div class="quiz-wrap">
+    <div class="quiz-back" onclick="showPage('home')">← 返回模块选择</div>
+    <div class="quiz-mod-header">
+      <div><div class="quiz-mod-title" id="quizModTitle">模块名称</div><div style="font-size:12px;color:var(--text2);margin-top:2px;" id="quizModDesc"></div></div>
+      <div style="font-size:11px;color:var(--text3);">SM-2 学习引擎</div>
+    </div>
+    <div class="quiz-hbar"><div class="quiz-prog-wrap"><div class="quiz-prog-fill" id="qProgFill" style="width:0%"></div></div><span class="quiz-cnt" id="qCnt">0/0</span></div>
+    <div class="sm2-row">
+      <span class="sm2-chip" style="background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);">EF <span id="efVal">2.50</span></span>
+      <span class="sm2-chip" style="background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);">下次 <span id="ivVal">1</span> 天</span>
+      <span class="sm2-chip" style="background:var(--purple-bg);color:var(--purple);border:1px solid rgba(167,139,250,.2);">连对 <span id="repVal">0</span> 次</span>
+    </div>
+    <div id="quizMain">
+      <div class="q-card"><div class="q-diff" id="qDiff"></div><div class="q-text" id="qText"></div><div class="mini-chart-wrap" id="qChart" style="display:none"><div class="mini-chart-label">指标示意图</div><div class="mini-chart" id="miniChart"></div></div></div>
+      <div class="opts" id="optsWrap"></div>
+      <div class="feedback-box" id="fbBox"><div class="fb-title" id="fbTitle"></div><div id="fbText"></div></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQ()">下一题 →</button>
+    </div>
+    <div class="complete-wrap" id="completeWrap" style="display:none">
+      <div class="complete-icon">🎯</div>
+      <div class="complete-title">模块完成！</div>
+      <div class="complete-sub" id="completeSubText"></div>
+      <div class="complete-stats">
+        <div class="cs"><div class="cs-v" id="csC" style="color:var(--green)">0</div><div class="cs-l">答对</div></div>
+        <div class="cs"><div class="cs-v" id="csW" style="color:var(--red)">0</div><div class="cs-l">答错</div></div>
+        <div class="cs"><div class="cs-v" id="csA" style="color:var(--accent)">0%</div><div class="cs-l">正确率</div></div>
+      </div>
+      <button class="restart-btn" onclick="restartQ()">再刷一遍</button>
+      <button class="back-home-btn" onclick="showPage('home')">返回首页</button>
+    </div>
+  </div>
+</div>
+<div id="page-stats" class="page">
+  <div class="stats-wrap">
+    <div class="stats-top">
+      <div class="stat-card hi"><div class="stat-label">累计答题</div><div class="stat-val">247</div><div class="stat-sub">近7天 +38</div></div>
+      <div class="stat-card"><div class="stat-label">综合正确率</div><div class="stat-val">72%</div><div class="stat-sub">较上周↑4%</div></div>
+      <div class="stat-card"><div class="stat-label">连续打卡</div><div class="stat-val">3天</div><div class="stat-sub">最长12天</div></div>
+      <div class="stat-card"><div class="stat-label">错题待复习</div><div class="stat-val">23</div><div class="stat-sub">今日新增5题</div></div>
+    </div>
+    <div class="sec-title">各模块掌握进度</div>
+    <div class="cat-list" id="catList"></div>
+    <div class="sec-title">近60天打卡热力图</div>
+    <div class="heatmap" id="heatmap"></div>
+  </div>
+</div>
+<div id="page-community" class="page">
+  <div class="comm-wrap">
+    <div class="comm-layout">
+      <div>
+        <div class="post-compose">
+          <div class="post-compose-top"><div class="compose-avatar" id="composeAvatar">学</div><textarea class="compose-input" id="composeInput" placeholder="分享技术分析心得、疑问或实战经验..."></textarea></div>
+          <div class="compose-bottom">
+            <div class="compose-tags">
+              <button class="compose-tag-btn" onclick="addTag('#MACD')">#MACD</button>
+              <button class="compose-tag-btn" onclick="addTag('#K线')">#K线</button>
+              <button class="compose-tag-btn" onclick="addTag('#委比')">#委比</button>
+              <button class="compose-tag-btn" onclick="addTag('#市盈率')">#市盈率</button>
+              <button class="compose-tag-btn" onclick="addTag('#问答')">#问答</button>
+            </div>
+            <button class="post-btn" onclick="submitPost()">发布</button>
+          </div>
+        </div>
+        <div class="post-list" id="postList"></div>
+      </div>
+      <div class="comm-sidebar">
+        <div class="sidebar-card"><div class="sidebar-title">热门话题</div><div id="hotTopics"></div></div>
+        <div class="sidebar-card"><div class="sidebar-title">学习排行榜</div><div id="leaderboard"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="page-wrong" class="page">
+  <div class="wrong-wrap">
+    <div class="sec-title" style="margin-bottom:10px;">错题本 · <span id="wrongCount">0</span> 题待复习</div>
+    <div class="filter-row" id="wrongFilters"></div>
+    <div class="wrong-list" id="wrongList"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const MODULES = [
+  {
+    id:'kline', name:'K线基础', tag:'入门必学', tagColor:'#22c55e', tagBg:'rgba(34,197,94,.1)',
+    desc:'阳线阴线、影线含义、十字星、常见单根与组合形态',
+    color:'#22c55e', progress:88, total:20,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'阳线（红色蜡烛）表示当日股价：',opts:['开盘价高于收盘价，价格下跌','收盘价高于开盘价，价格上涨','开盘价等于收盘价','当日涨停'],ans:1,exp:'阳线收盘价高于开盘价，实体颜色为红色（中国A股），实体越长代表涨幅越大。'},
+      {diff:'基础',dc:'#22c55e',text:'K线的上影线代表什么？',opts:['当日最低价与开盘价的距离','当日最高价与实体上沿的距离，反映多头遭到空头压制','当日涨幅大小','成交量的多少'],ans:1,exp:'上影线=最高价−实体上沿。上影线越长，说明高位卖压越重，空头力量越强。'},
+      {diff:'基础',dc:'#22c55e',text:'光头阳线（无上影线的阳线）说明：',opts:['当天跌幅很大','多头全程主导，收盘在最高价附近','成交量必然放大','次日一定继续上涨'],ans:1,exp:'光头阳线没有上影线，说明全天多头完全控盘，高点即是收盘价，是极强买入信号，仍需结合后续K线确认。'},
+      {diff:'基础',dc:'#22c55e',text:'"光脚阳线"（无下影线的阳线）说明：',opts:['当天开盘后从未回调，全程上涨，多头极度强势','当天有大量空头介入','收盘价低于开盘价','成交量一定很小'],ans:0,exp:'光脚阳线没有下影线，说明开盘即是最低价，全天价格没有向下回调，多头从开盘就完全主导，极度强势。'},
+      {diff:'基础',dc:'#22c55e',text:'"十字星"（收盘价≈开盘价，有上下影线）出现在高位时通常意味着：',opts:['趋势加速信号，追涨','多空势均力敌，可能是变盘预警，需观察次日走向','必然大跌','与位置无关'],ans:1,exp:'十字星代表多空博弈平衡，在高位出现说明原来强势的多头开始遭遇抵抗，是重要的变盘信号，实际方向需看后续K线确认。'},
+      {diff:'基础',dc:'#22c55e',text:'阴线（绿色蜡烛）中，实体越长说明：',opts:['当日成交量越大','当日跌幅越大，空头力量越强','当日振幅越大','当日换手率越高'],ans:1,exp:'阴线实体=开盘价−收盘价，实体越长代表当日跌幅越大，空头力量越强，卖压越重。'},
+      {diff:'中级',dc:'#f0b429',text:'"孕线"形态（母线完全包含子线）通常预示：',opts:['趋势加速','波动收缩，方向选择前的蓄势阶段','成交量必然放大','可以加杠杆'],ans:1,exp:'孕线中子线被母线完全包裹，说明市场波动率显著收窄，多空僵局，通常是大幅波动前的蓄势，突破方向决定后市。'},
+      {diff:'中级',dc:'#f0b429',text:'"锤子线"（小实体、长下影线）出现在下跌末端时，最可能代表：',opts:['趋势延续，继续下跌','下跌动能减弱，多头在低位积极防守，是潜在底部反转信号','成交量萎缩信号','必须配合缺口才有效'],ans:1,exp:'锤子线长下影线说明当天虽然大幅下探，但多头将价格拉回高位。下跌末端出现代表卖盘衰竭，是经典底部反转信号，次日阳线确认更可靠。'},
+      {diff:'中级',dc:'#f0b429',text:'"吊颈线"（小实体、长下影线）出现在上涨趋势高位时：',opts:['是继续上涨的信号','与锤子线形态相同但含义相反，是见顶预警信号','代表成交量放大','必然立即下跌'],ans:1,exp:'吊颈线与锤子线形态完全相同，但出现位置不同，含义相反。出现在高位时，说明多头在高位遭遇强烈卖压，价格被大幅压低后才拉回，是潜在顶部信号。'},
+      {diff:'中级',dc:'#f0b429',text:'"早晨之星"（看涨三线组合）的标准形态是：',opts:['三根连续大阳线','大阴线→小实体星线→大阳线，第三根阳线收于第一根阴线实体中部以上','两根阴线夹一根阳线','连续小阴线后出现大阳线'],ans:1,exp:'"早晨之星"三根K线：①大阴线（空头）②小星线（僵局）③大阳线收于第一根阴线实体50%以上（多头反攻）。是可靠的底部反转信号。'},
+      {diff:'中级',dc:'#f0b429',text:'"黄昏之星"与"早晨之星"的关系是：',opts:['完全相同的形态','互为镜像，黄昏之星是顶部反转信号（大阳→星→大阴）','没有任何关联','只有黄昏之星有效'],ans:1,exp:'"黄昏之星"是"早晨之星"的镜像：大阳线→小星线→大阴线，出现在上涨高位，是经典顶部反转信号，大阴线需收于大阳线实体50%以下才能确认。'},
+      {diff:'中级',dc:'#f0b429',text:'"穿头破脚"（看涨吞没形态）的含义是：',opts:['大阴线吞没前一根阳线','大阳线完全吞没前一根阴线，是底部强力反转信号','两根K线方向相同','成交量萎缩形态'],ans:1,exp:'看涨吞没：大阳线的开盘价低于前一根阴线的收盘价，大阳线的收盘价高于前一根阴线的开盘价，完全"吞没"了前一根阴线。出现在下跌末端是强力底部反转信号。'},
+      {diff:'进阶',dc:'#ef4444',text:'"断头铡刀"形态（高位大阴线+跳空低开）出现时，操作建议是：',opts:['逢低买入，超跌反弹','快速止损离场，形态破坏性极强，不宜恋战','加仓摊低成本','观察后续5根K线再决定'],ans:1,exp:'"断头铡刀"是最危险的顶部信号之一：前一天大阳线，次日跳空低开大阴线，完全吞噬前一日涨幅。是主力快速撤退的信号，应快速止损，不宜抄底。'},
+      {diff:'进阶',dc:'#ef4444',text:'缺口（Gap）在技术分析中的重要性是：',opts:['缺口出现说明成交量异常，无参考价值','缺口代表强烈的供需失衡，不同类型的缺口（突破/持续/竭尽缺口）有不同含义，且缺口往往会被"回补"','缺口出现后价格一定反向运行','只有向上缺口有意义'],ans:1,exp:'缺口类型：①突破缺口（放量，出现在盘整后，方向性强）②持续缺口（趋势中段，代表趋势延续）③竭尽缺口（趋势末端，放量后价格疲软，是反转信号）。"缺口必被回补"是股市谚语，但时间长短不定。'},
+      {diff:'进阶',dc:'#ef4444',text:'"岛形反转"形态的特征是：',opts:['出现在岛屿附近的K线','由两个缺口将一段价格孤立（向上跳空后向下跳空），是强力反转信号','连续三根阳线','成交量连续放大三天'],ans:1,exp:'岛形反转：价格先向上跳空突破，形成一段孤立的高价区，随后向下跳空回落，两个缺口方向相反，将高价区"孤立"成一个岛。是顶部最强烈的反转信号之一。'},
+    ]
+  },
+  {
+    id:'ma', name:'均线系统', tag:'核心基础', tagColor:'#60a5fa', tagBg:'rgba(96,165,250,.1)',
+    desc:'MA、EMA、多空排列、葛兰碧法则、均线支撑压力',
+    color:'#60a5fa', progress:74, total:18,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'5日均线（MA5）的计算方式是：',opts:['最近5天最高价的平均值','最近5个交易日收盘价的算术平均值','最近5天成交量的平均值','最近5天开盘价的平均值'],ans:1,exp:'MA5 = (第1天收盘价+第2天+...+第5天) ÷ 5，是最基础的短期趋势参考线。'},
+      {diff:'基础',dc:'#22c55e',text:'均线"多头排列"是指：',opts:['所有均线都在下降','短期均线在上，长期均线在下，如5日>10日>20日>60日','所有均线都是水平的','5日线穿越10日线'],ans:1,exp:'多头排列：各周期均线从上到下依次为短期>中期>长期，说明各时间周期买盘均强，是典型上升趋势特征。'},
+      {diff:'基础',dc:'#22c55e',text:'均线"空头排列"是指：',opts:['短期均线在上，长期均线在下','长期均线在上，短期均线在下，如60日>20日>10日>5日','均线纠缠在一起','所有均线都在上涨'],ans:1,exp:'空头排列与多头排列相反：长期>中期>短期，说明各时间周期卖盘均强，是典型下降趋势特征。'},
+      {diff:'基础',dc:'#22c55e',text:'EMA（指数移动平均线）与MA相比，主要区别是：',opts:['EMA计算更简单','EMA对近期数据赋予更高权重，对价格变化反应更灵敏','EMA只用于MACD','两者完全相同'],ans:1,exp:'EMA是加权移动平均线，越近期的数据权重越高，因此比MA更灵敏，信号出现更早，但也更容易发出假信号。MACD就是基于EMA计算的。'},
+      {diff:'中级',dc:'#f0b429',text:'葛兰碧均线买入法则第一条（最经典买点）是：',opts:['价格站在均线上方时买入','均线由下降逐渐走平或转为上升，价格从均线下方突破均线向上穿越','价格跌破均线时买入','均线出现金叉时买入'],ans:1,exp:'葛兰碧第一买点：均线趋势转变（由跌转平或转涨），价格向上突破均线。是趋势由空转多的经典信号，需配合成交量放大确认。'},
+      {diff:'中级',dc:'#f0b429',text:'葛兰碧均线第三买点是：',opts:['价格跌破均线时立即买入','价格在均线上方回调但未跌破均线，随后再次向上时的买入机会（回踩均线确认支撑）','价格远高于均线时买入','均线死叉时买入'],ans:1,exp:'葛兰碧第三买点：上升趋势中，价格回调接近但未跌破均线，再次向上是买入机会。这是趋势交易中最常用的买点，"回踩均线买入"策略的来源。'},
+      {diff:'中级',dc:'#f0b429',text:'均线"金叉"是指：',opts:['长期均线从下方穿越短期均线向上','短期均线从下方穿越长期均线向上（如5日线上穿10日线）','两条均线同时上涨','均线斜率变大'],ans:1,exp:'金叉：短期均线从下方穿越长期均线向上，代表短期趋势超过长期，是买入参考信号。金叉发生在低位（价格在均线下方）时参考价值更高。'},
+      {diff:'中级',dc:'#f0b429',text:'60日均线（季线）在实战中通常代表什么？',opts:['只有短线交易才需要关注','中长期趋势的重要参考线，是机构资金的重要参考均线，也是牛熊分界线之一','只适合基本面分析','成交量指标'],ans:1,exp:'60日线（约3个月）是机构资金重要的成本参考线。价格在60日线上方通常被视为中期多头，下方为中期空头。年线（250日线）则是更长周期的牛熊分水岭。'},
+      {diff:'中级',dc:'#f0b429',text:'均线系统中，"均线粘合"（多条均线纠缠在一起）通常代表：',opts:['趋势非常明确','多空力量均衡，市场在积蓄方向性能量，即将出现趋势行情','成交量萎缩','价格横盘时间越长越好'],ans:1,exp:'均线粘合代表各周期均线趋势趋同，市场在整理蓄势。通常粘合时间越长，后续突破的力度越大。突破方向（放量向上或向下）决定新一轮趋势的方向。'},
+      {diff:'进阶',dc:'#ef4444',text:'在强势上涨趋势中，价格突然快速下跌击穿20日均线但当天收盘收回，应如何理解？',opts:['均线支撑已破，应立即卖出','可能是假突破（回测均线），多头仍强，收盘价收回均线上方是关键，不应仓皇卖出','加仓买入信号','与均线无关'],ans:1,exp:'"假突破"：价格短暂跌破均线但当天收回，说明多头在均线附近积极防守，支撑有效。实战中收盘价是否有效跌破均线（而非盘中），是判断均线支撑是否真正破位的关键。'},
+    ]
+  },
+  {
+    id:'macd', name:'MACD 指标', tag:'重点掌握', tagColor:'#f0b429', tagBg:'rgba(240,180,41,.1)',
+    desc:'DIF/DEA/柱状图、金叉死叉、顶底背离、零轴判断',
+    color:'#f0b429', progress:61, total:20,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'MACD中DIF（差离值）的计算公式是：',opts:['DIF = 收盘价 − 开盘价','DIF = 12日EMA − 26日EMA','DIF = 成交量 × 价格变化','DIF = (最高价 + 最低价) ÷ 2'],ans:1,exp:'DIF = 12日EMA − 26日EMA，反映短期与长期趋势的差值。正值代表短期均线在上，负值代表短期均线在下。'},
+      {diff:'基础',dc:'#22c55e',text:'MACD中DEA（信号线）是如何计算的？',opts:['DEA = DIF的9日EMA','DEA = 26日均线','DEA = DIF + 成交量','DEA = 收盘价的9日均线'],ans:0,exp:'DEA = DIF的9日EMA，是对DIF的平滑处理，相当于DIF的移动平均线，用于过滤DIF的噪音，产生更稳定的交叉信号。'},
+      {diff:'基础',dc:'#22c55e',text:'MACD柱状图（Histogram/MACD Bar）的计算是：',opts:['DIF − DEA（通常放大2倍显示）','DIF + DEA','DIF × DEA','DIF ÷ DEA'],ans:0,exp:'MACD柱 = (DIF − DEA) × 2。柱子由红转绿（由正转负）是死叉，由绿转红（由负转正）是金叉，柱子的长短代表DIF与DEA差距的大小。'},
+      {diff:'基础',dc:'#22c55e',text:'MACD金叉（DIF向上穿越DEA）出现，通常意味着：',opts:['短期动能弱于长期，卖出信号','短期动能增强超过长期，阶段性买入参考信号','进入超买区，应该卖出','K线形成顶部'],ans:1,exp:'金叉代表短期动能（DIF）超过长期信号线（DEA），是趋势转多的信号。但信号的强弱还需结合发生位置（零轴上下）来判断。'},
+      {diff:'中级',dc:'#f0b429',text:'MACD在零轴以上发生的金叉（二次金叉）与零轴以下的金叉相比：',opts:['零轴以下更强，因为超卖弹性更大','零轴以上更强，大趋势仍为多头，是趋势中回调结束的买点','两者完全相同','零轴附近的金叉无效'],ans:1,exp:'零轴以上金叉（二次金叉）：大趋势保持多头，是上涨过程中的回调买点，可信度高。零轴以下金叉可能只是空头趋势中的反弹，需更谨慎，配合其他信号使用。'},
+      {diff:'中级',dc:'#f0b429',text:'MACD"顶背离"的定义是：',opts:['股价创新高，MACD也同步创新高','股价创出新高，但DIF或MACD柱子未同步创新高，形成下背离','MACD在零轴以上运行','DIF和DEA同时下行'],ans:1,exp:'顶背离：价格创新高，但MACD指标（DIF或柱子高点）低于前一个高点。说明上涨动能在减弱，是见顶预警，通常预示回调或趋势反转。'},
+      {diff:'中级',dc:'#f0b429',text:'MACD"底背离"（股价创新低但MACD未创新低）最有参考价值的条件是：',opts:['出现在任意位置都可以立即买入','出现在长期下跌末端+成交量缩量，参考价值最高','只在周线级别有效','底背离后价格必然立即反弹'],ans:1,exp:'底背离有效条件：①长期明显下跌趋势末端②价格创新低时成交量缩量（卖盘衰竭）③时间周期越大越可靠（日线>60分钟）。满足条件时是重要的底部反转参考信号。'},
+      {diff:'中级',dc:'#f0b429',text:'MACD柱子持续缩短（红柱越来越短），说明：',opts:['多头力量越来越强','多头动能在减弱，DIF与DEA的差距在缩小，可能即将金叉或死叉','成交量在萎缩','价格一定下跌'],ans:1,exp:'MACD柱子缩短：DIF与DEA之间的差距在缩小，代表当前方向的动能在减弱。红柱缩短→可能死叉；绿柱缩短→可能金叉。是提前预警信号，比金叉死叉更早发出。'},
+      {diff:'进阶',dc:'#ef4444',text:'MACD在强势上涨行情中长期"钝化"（持续高位不死叉），交易者应该：',opts:['立即卖出，超买必然回落','认识到强势行情中MACD会钝化，不能仅凭高位就卖出，需结合价格行为（K线破位、均线破位）判断卖点','等待MACD死叉才能卖出，其余时候持仓不动','换用其他指标完全替代MACD'],ans:1,exp:'MACD钝化是强势行情特征，此时依赖MACD卖出会频繁踏空。应转用价格行为：价格跌破重要均线、出现顶部K线形态（断头铡刀、大阴线）才是卖出时机。任何指标都有局限性。'},
+      {diff:'进阶',dc:'#ef4444',text:'在周线MACD出现金叉、日线MACD也出现金叉时，这种多周期共振意味着：',opts:['信号矛盾，不能操作','多周期共振买入信号，可信度显著提高，是较高胜率的买入机会','只看周线信号就够了','日线信号比周线更重要'],ans:1,exp:'多周期共振：当大级别（周线）和小级别（日线）方向一致时，信号可信度大幅提升。实战中，先在大周期寻找趋势方向，再在小周期寻找买入时机，是专业交易者的常用方法。'},
+    ]
+  },
+  {
+    id:'kdj', name:'KDJ 指标', tag:'重点掌握', tagColor:'#fb923c', tagBg:'rgba(251,146,60,.1)',
+    desc:'K/D/J值含义、超买超卖、金叉死叉、钝化现象',
+    color:'#fb923c', progress:55, total:16,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'KDJ指标中，K值和D值都处于80以上称为：',opts:['超卖区，应该买入','超买区，价格可能偏高，需警惕回调风险','中性区，无参考意义','成交量异常区'],ans:1,exp:'KDJ超买区（80以上）：价格在一段时间内相对偏高，有回调风险。注意：超买不代表立即下跌，强势行情可能长期在80以上钝化。超卖区在20以下。'},
+      {diff:'基础',dc:'#22c55e',text:'KDJ中J值的计算公式是：',opts:['J = K + D','J = 3K − 2D','J = (K + D) ÷ 2','J = K × D'],ans:1,exp:'J = 3K − 2D，J值是KDJ中最灵敏的线，波动最大（可超过100或低于0），转折信号出现最早，但误报率也最高。'},
+      {diff:'基础',dc:'#22c55e',text:'KDJ中，哪条线最灵敏（信号出现最早但误报最多）？',opts:['K值','D值','J值','三条线一样灵敏'],ans:2,exp:'J值最灵敏：J = 3K − 2D，是对K值的放大，波动幅度最大，能最早发现超买超卖，但也最容易发出错误信号。K值其次，D值最平滑。'},
+      {diff:'中级',dc:'#f0b429',text:'KDJ在低位（20以下）出现金叉，通常意味着：',opts:['继续下跌，空头加速','低位金叉是较强买入参考信号，下跌动能减弱，多头开始反攻','必须等待价格创新低才能买入','此时金叉没有任何参考价值'],ans:1,exp:'低位金叉（K从下方穿越D向上）在超卖区出现，是较可靠的买入信号。越低的位置（K、D都在10以下）信号越强，但仍需K线形态确认。'},
+      {diff:'中级',dc:'#f0b429',text:'KDJ高位死叉（K从上方穿越D向下，位置在80以上）通常意味着：',opts:['强烈买入信号，价格即将飙升','高位死叉是见顶预警，短期可能回调，考虑减仓','与位置无关，无参考价值','立即加仓'],ans:1,exp:'高位死叉在超买区（80以上）出现，说明短期动能已经反转，是卖出或减仓的参考信号。高位死叉在强势行情中可能多次"假死叉"，需配合K线和成交量确认。'},
+      {diff:'中级',dc:'#f0b429',text:'KDJ在50附近（中性区）发生金叉，参考价值如何？',opts:['中性区金叉是最强买入信号','中性区金叉参考价值相对较低，需结合其他指标确认方向','中性区完全无法操作','直接卖出'],ans:1,exp:'KDJ在中性区（40-60）发生的交叉，没有超买超卖的方向性含义，信号弱于高位死叉或低位金叉。需结合MACD趋势、均线方向等其他指标来判断。'},
+      {diff:'进阶',dc:'#ef4444',text:'KDJ指标最大的局限性是什么？',opts:['计算过于复杂','在震荡行情中频繁发出错误金叉死叉信号（鞭打），误导操作','只适用于短线','无法判断超买超卖'],ans:1,exp:'KDJ在趋势明确市场中有效，但在横盘震荡中会频繁"鞭打"，频繁买卖导致亏损。解决方案：趋势市顺势用KDJ，震荡市降低KDJ权重，改用BOLL或量价关系判断区间。'},
+      {diff:'进阶',dc:'#ef4444',text:'同时参考日线KDJ和30分钟KDJ操作时，正确的方法是：',opts:['只看日线KDJ，忽略30分钟','用日线KDJ判断大方向，在日线金叉趋势下，用30分钟KDJ寻找具体买入时机','两者矛盾时随机选一个','30分钟KDJ更重要'],ans:1,exp:'多周期KDJ使用法：大周期判断方向，小周期寻找时机。当日线KDJ金叉（大方向做多），在30分钟KDJ回调至低位再次金叉时买入，是高胜率的精细化操作方法。'},
+    ]
+  },
+  {
+    id:'boll', name:'BOLL 布林带', tag:'进阶指标', tagColor:'#a78bfa', tagBg:'rgba(167,139,250,.1)',
+    desc:'上中下轨、带宽变化、突破策略、均值回归策略',
+    color:'#a78bfa', progress:38, total:14,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'布林带由哪三条线组成？',opts:['5日线、10日线、20日线','上轨（+2σ）、中轨（20日MA）、下轨（−2σ）','DIF线、DEA线、柱状图','K值、D值、J值'],ans:1,exp:'布林带三线：中轨=20日SMA，上轨=中轨+2倍标准差，下轨=中轨−2倍标准差。理论上，约95%的价格会在上下轨之间运行。'},
+      {diff:'基础',dc:'#22c55e',text:'布林带"收口"（带宽变窄）意味着：',opts:['市场波动加剧','市场波动率降低，正在蓄势，即将出现方向性大幅行情','成交量萎缩','价格一定下跌'],ans:1,exp:'布林带宽度直接反映市场波动率。带宽收窄→波动率降低→市场在积蓄能量→通常预示较大的方向性突破即将来临。'},
+      {diff:'基础',dc:'#22c55e',text:'布林带"开口"（带宽扩大）意味着：',opts:['市场即将反转','市场波动率增大，趋势行情正在进行，价格加速运动','成交量必然减少','价格即将横盘'],ans:1,exp:'布林带开口代表波动率扩大，是趋势行情的特征。向上开口（上轨向上扩张）配合价格沿上轨运行是强势上涨；向下开口配合沿下轨运行是强势下跌。'},
+      {diff:'中级',dc:'#f0b429',text:'价格放量突破布林带上轨后，最可能出现的情形是：',opts:['立即卖出，上轨是强压力','可能进入"上轨走带"（沿上轨持续运行），是强势持有信号；缩量突破则多为假突破','一定回落到中轨','是假突破，必须卖出'],ans:1,exp:'放量突破上轨→强势信号，可能进入上轨走带模式。缩量突破上轨→假突破概率高，价格很快回落。区分放量与缩量是布林带突破策略的核心。'},
+      {diff:'中级',dc:'#f0b429',text:'在震荡行情中，布林带的有效用法是：',opts:['价格突破上轨就买入','触碰上轨卖出、触碰下轨买入（均值回归策略）','只看中轨方向操作','布林带在震荡行情中完全失效'],ans:1,exp:'震荡市中布林带均值回归策略：价格触碰上轨→超买，卖出；触碰下轨→超卖，买入；以中轨为止损。这与趋势市的突破策略逻辑完全相反，先判断市场状态是关键。'},
+      {diff:'中级',dc:'#f0b429',text:'"下轨走带"（价格沿下轨持续运行）说明：',opts:['超跌反弹即将来临，立即买入','空头极度强势，不宜抄底，需等待价格站回下轨以上才考虑介入','布林带失效','成交量必然缩量'],ans:1,exp:'"下轨走带"是空头强势的表现，常见于趋势性下跌。此时抄底风险极大，应等待价格企稳的信号：①价格收盘回到下轨以上②出现底部K线形态③成交量缩量后的反弹放量。'},
+      {diff:'进阶',dc:'#ef4444',text:'布林带中轨（20日MA）的作用是：',opts:['只是参考线，没有实际意义','是重要的动态支撑压力线：上涨时中轨是支撑，下跌时中轨是压力；也是判断趋势的参考','只有在收口时中轨才有用','中轨代表成交量'],ans:1,exp:'中轨（20日MA）是布林带的核心参考：①趋势判断——价格在中轨上方偏多，下方偏空②支撑压力——上涨趋势中价格回踩中轨是买入机会③中轨方向代表中期趋势方向。'},
+    ]
+  },
+  {
+    id:'rsi', name:'RSI 强弱指标', tag:'常用指标', tagColor:'#34d399', tagBg:'rgba(52,211,153,.1)',
+    desc:'RSI计算逻辑、超买超卖区间、背离运用、多周期配合',
+    color:'#34d399', progress:45, total:12,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'RSI指标的数值范围是：',opts:['无限制','0到100之间','−100到100之间','0到50之间'],ans:1,exp:'RSI（相对强弱指标）数值固定在0−100。通常：70以上为超买，30以下为超卖（也有用80/20作为界限的版本）。'},
+      {diff:'基础',dc:'#22c55e',text:'RSI(14)中"14"代表：',opts:['14个月的数据','14个交易日（计算周期）','超买线的数值','版本号'],ans:1,exp:'RSI括号内的数字是计算周期。RSI(14)用最近14个交易日计算。周期越短越灵敏（误报多），周期越长越稳定（信号少）。常用6、14、24三种周期。'},
+      {diff:'中级',dc:'#f0b429',text:'RSI长期在50以上运行意味着：',opts:['价格一定继续上涨','多头主导的强势行情，回调到50附近可能是支撑，50是多空分界线','市场极度不稳定','RSI指标失效'],ans:1,exp:'RSI50是多空分界线：长期在50以上代表多头占优，是强势行情特征。回踩RSI50附近往往是买入机会（而非卖出信号），是RSI均值回归用法。'},
+      {diff:'中级',dc:'#f0b429',text:'RSI"顶背离"（价格创新高但RSI未创新高）最有效的条件：',opts:['出现在任何位置都有效','RSI位于超买区（70以上）且出现背离，配合K线顶部形态，参考价值最高','只在日线有效','RSI背离没有任何意义'],ans:1,exp:'RSI顶背离有效条件：①RSI在超买区（70以上）②价格创新高但RSI高点更低③配合顶部K线形态或成交量缩减。满足越多条件，信号越可靠。'},
+      {diff:'进阶',dc:'#ef4444',text:'同时使用RSI(6)和RSI(14)时，最有价值的信号组合是：',opts:['两者都在超买区','RSI(6)在高位死叉RSI(14)，说明短期动能快速衰减超过中期水平，是较可靠见顶信号','只看RSI(14)','两者差值越大越好买'],ans:1,exp:'双线RSI交叉：RSI(6)代表短期动能，RSI(14)代表中期动能。RSI(6)从高位死叉RSI(14)，比单纯看RSI超买线更精确。RSI(6)低位金叉RSI(14)同理，是更精细的买入信号。'},
+    ]
+  },
+  {
+    id:'volume', name:'量价关系', tag:'进阶指标', tagColor:'#f87171', tagBg:'rgba(248,113,113,.1)',
+    desc:'量价配合原则、放量缩量、量价背离、OBV能量指标',
+    color:'#f87171', progress:42, total:14,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'"量是价的先行指标"的含义是：',opts:['成交量变化不重要','成交量的变化往往早于价格变化，可以提前预示趋势变化','成交量只在做T时有用','量大就一定涨'],ans:1,exp:'成交量代表市场参与度和资金流向，通常比价格更早发出信号。底部放量先于价格上涨，高位缩量先于价格下跌，是量价分析的核心逻辑。'},
+      {diff:'基础',dc:'#22c55e',text:'理想的上涨行情，量价关系应该是：',opts:['价格上涨，成交量萎缩','价格上涨，成交量同步放大（价涨量增）','成交量固定不变','价格上涨时成交量越小越好'],ans:1,exp:'"价涨量增"是健康上涨的标志，说明资金持续流入，买盘热情高涨，趋势可持续。反之，"价涨量缩"是危险信号（后面会单独讲）。'},
+      {diff:'中级',dc:'#f0b429',text:'高位"放量滞涨"（成交量大幅放大但价格涨幅很小）是：',opts:['主力积极吸筹，强烈买入信号','主力出货警告信号：大量卖盘被大量买盘对冲，价格推不上去','成交量技术故障','与趋势无关的随机现象'],ans:1,exp:'"放量滞涨"是最经典的主力出货信号：每一笔买入背后都有等量卖出，价格涨不动说明上方卖压极重。"量大不涨即是顶"，高位出现需高度警惕。'},
+      {diff:'中级',dc:'#f0b429',text:'"价涨量缩"（价格上涨但成交量萎缩）通常意味着：',opts:['最佳买入时机','价格上涨缺乏成交量支撑，是虚涨，持续性差，随时可能回落','成交量波动正常','趋势非常强势'],ans:1,exp:'"价涨量缩"是最危险的量价背离：上涨没有增量资金跟进，市场人气不足，主力可能在利用惯性出货。这种上涨往往是最后的冲顶，随时可能反转。'},
+      {diff:'中级',dc:'#f0b429',text:'底部"缩量下跌"后出现"放量反弹"，这种组合通常说明：',opts:['下跌趋势延续','卖盘衰竭（缩量）→新买盘入场（放量反弹），是底部信号，但需要放量突破颈线才能确认','与成交量无关','随机波动'],ans:1,exp:'经典底部量能演变：缩量下跌（卖盘逐渐枯竭）→某天放量大阳线（新买盘大量介入）→这是底部确认的标志性信号。放量突破前期高点（颈线）才是做多进场时机。'},
+      {diff:'进阶',dc:'#ef4444',text:'OBV（能量潮）指标的计算逻辑是：',opts:['OBV = 成交量 × 价格','价格上涨日加当日成交量，价格下跌日减当日成交量，累计计算','OBV = 平均成交量','OBV只统计大单成交量'],ans:1,exp:'OBV（On Balance Volume）：价涨日+成交量，价跌日−成交量，累计叠加。OBV的趋势代表资金流向：OBV持续上升说明资金持续流入；OBV与价格出现背离，是重要的趋势预警信号。'},
+      {diff:'进阶',dc:'#ef4444',text:'"天量天价"（历史最大成交量出现在阶段高位）通常是：',opts:['继续上涨的强烈信号','阶段性见顶信号：极端放量往往代表最后的疯狂，是主力出货的最后机会，随后价格通常大幅回落','成交量技术错误','与价格无关'],ans:1,exp:'"天量见顶"规律：历史级别的极端放量出现在高位，说明市场情绪达到极度亢奋，所有愿意买入的资金都已入场，此后找不到更多买盘，价格面临下跌压力。'},
+    ]
+  },
+  {
+    id:'weibo', name:'委比·内外盘', tag:'盘口分析', tagColor:'#38bdf8', tagBg:'rgba(56,189,248,.1)',
+    desc:'委买委卖、委比计算、内盘外盘、主动买卖判断',
+    color:'#38bdf8', progress:20, total:12,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'委比的计算公式是：',opts:['委比 = 委买手数 + 委卖手数','委比 = (委买手数 − 委卖手数) ÷ (委买手数 + 委卖手数) × 100%','委比 = 委买手数 ÷ 委卖手数','委比 = 成交量 ÷ 流通股数'],ans:1,exp:'委比 = (委买 − 委卖) ÷ (委买 + 委卖) × 100%。结果在−100%到+100%之间。正值说明买盘挂单多于卖盘，偏多；负值说明卖盘多于买盘，偏空。'},
+      {diff:'基础',dc:'#22c55e',text:'委比为+50%，说明：',opts:['股价上涨了50%','委买挂单明显多于委卖挂单，市场短期买盘意愿强，偏多','卖盘是买盘的50倍','成交量放大50%'],ans:1,exp:'委比+50%：委买挂单大幅超过委卖挂单，说明市场中愿意买入的力量强于愿意卖出的力量，短期看多信号。但委比是瞬时数据，可能被大单快速改变。'},
+      {diff:'基础',dc:'#22c55e',text:'委比为负值（如−30%）意味着：',opts:['股价下跌了30%','委卖挂单多于委买挂单，卖盘压力大于买盘意愿，短期偏空','买盘是卖盘的30倍','成交量萎缩'],ans:1,exp:'委比负值：委卖挂单超过委买挂单，说明卖方意愿更强，短期偏空。委比越低（越接近−100%），卖压越重。'},
+      {diff:'中级',dc:'#f0b429',text:'"外盘"是指：',opts:['场外交易的股票','以卖方挂单价格成交的交易（主动买入），反映买方积极程度','盘后大宗交易','境外资金买入'],ans:1,exp:'外盘（主动买）：买方以卖方挂出的卖价直接成交，是主动追涨的买盘。外盘大说明买方急于成交，不愿等待，市场买入意愿强烈。'},
+      {diff:'中级',dc:'#f0b429',text:'"内盘"是指：',opts:['在交易所内部成交的订单','以买方挂单价格成交的交易（主动卖出），反映卖方积极程度','大股东增持','内部员工购买'],ans:1,exp:'内盘（主动卖）：卖方以买方挂出的买价直接成交，是主动砸盘的卖盘。内盘大说明卖方急于出手，不愿等待，市场卖出意愿强烈。'},
+      {diff:'中级',dc:'#f0b429',text:'外盘持续大于内盘，价格却不涨，这种现象通常说明：',opts:['买方力量非常强势，即将大涨','上方有大量隐藏卖单（大单挂卖/对倒），买盘被消化但价格推不上去，需警惕','成交量技术异常','与价格无关'],ans:1,exp:'外盘大但价格不涨：说明上方存在大量卖压（可能是大单分批挂卖），所有买盘都被对应的卖盘消化。是主力出货的隐蔽手法，需结合盘口大单监控判断。'},
+      {diff:'中级',dc:'#f0b429',text:'如何通过内外盘比例判断短期资金意向？',opts:['内外盘比例无法判断资金方向','外盘比例持续高（>60%）→资金主动买入积极，短期偏多；内盘比例持续高→资金主动抛售，短期偏空','外盘内盘各代表一半力量','只有大盘股才能用内外盘分析'],ans:1,exp:'内外盘是判断主动买卖意愿的工具：外盘/(内盘+外盘)>60%且价格上涨，是资金积极做多的信号；内盘比例持续偏高，是资金主动抛售的警告。结合委比综合判断更准确。'},
+      {diff:'进阶',dc:'#ef4444',text:'委比和委差的区别是：',opts:['完全相同，只是名称不同','委比是百分比（相对值），委差是绝对值（委买手数−委卖手数）；委比适合不同价格股票横向比较，委差适合观察绝对差异','委差比委比更重要','只有委比有参考价值'],ans:1,exp:'委比（相对值）适合横向比较不同股票的买卖意愿强弱；委差（绝对值）适合观察同一只股票不同时间的买卖力量变化。两者配合使用，委比>0且委差绝对值大，是更强的看多信号。'},
+    ]
+  },
+  {
+    id:'turnover', name:'换手率', tag:'量能分析', tagColor:'#fb923c', tagBg:'rgba(251,146,60,.1)',
+    desc:'换手率计算、高低换手含义、活跃度判断、洗盘识别',
+    color:'#fb923c', progress:15, total:12,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'换手率的计算公式是：',opts:['换手率 = 成交量 ÷ 总股本 × 100%','换手率 = 成交量 ÷ 流通股本 × 100%','换手率 = 成交额 ÷ 市值 × 100%','换手率 = 成交笔数 ÷ 流通股本'],ans:1,exp:'换手率 = 当日成交量 ÷ 流通股本 × 100%。注意是流通股本（可以在市场自由交易的股票数量），而非总股本（包含限售股）。'},
+      {diff:'基础',dc:'#22c55e',text:'换手率1%说明：',opts:['当日有1%的股票价格上涨','当日有1%的流通股完成了买卖换手，交投相对清淡','当日跌幅1%','成交量很大'],ans:1,exp:'换手率1%代表当日有1%的流通股完成了买卖，对大多数A股来说属于正常偏清淡水平。A股日换手率通常在0.5%−5%之间，超过10%属于极度活跃。'},
+      {diff:'基础',dc:'#22c55e',text:'换手率高代表什么？',opts:['股票价格一定上涨','市场交投活跃，资金关注度高，筹码流通性好，但也可能是主力出货','公司基本面好','股票安全无风险'],ans:1,exp:'高换手率说明该股受资金高度关注，筹码流通活跃。可能是：①主力建仓②散户追涨③主力出货。需结合价格变化判断：高换手+价格上涨=主动建仓；高换手+价格滞涨=出货信号。'},
+      {diff:'中级',dc:'#f0b429',text:'在股价上涨过程中，换手率持续放大意味着：',opts:['主力在悄悄出货','买盘热情高涨，资金持续流入，上涨行情可持续性强','成交量与趋势无关','价格即将反转下跌'],ans:1,exp:'上涨中换手率持续放大（量能配合）：是健康上涨的标志，说明市场参与度在提升，有源源不断的新资金加入，趋势可持续。是"价涨量增"的换手率版本。'},
+      {diff:'中级',dc:'#f0b429',text:'在股价下跌过程中，换手率极低（缩量下跌）通常说明：',opts:['下跌趋势非常强劲','卖盘稀少，市场交投清淡，持股者不愿卖出，但买盘也弱，下跌动能减弱，可能是筑底过程','成交量越低越好','立即买入抄底'],ans:1,exp:'缩量下跌：卖方不愿割肉，但买方也不积极接盘，双方都在观望。通常出现在下跌末端，说明下跌动能衰竭。但不代表立即反弹，需等待放量信号确认底部。'},
+      {diff:'中级',dc:'#f0b429',text:'什么是"洗盘"中的换手率特征？',opts:['换手率极高，但价格大幅下跌（换手率高+跌幅大）','换手率相对较低，价格在区间内震荡，主力通过轻度下跌让意志不坚定的散户卖出筹码','换手率始终不变','换手率与洗盘无关'],ans:1,exp:'主力洗盘特征：换手率相对不高（主力自己不卖），价格在小区间内震荡（制造恐慌但不深跌），让散户主动割肉换出筹码。洗盘后通常放量拉升，是识别洗盘的关键。'},
+      {diff:'进阶',dc:'#ef4444',text:'A股中，换手率超过多少通常被认为是极度活跃？',opts:['超过1%','超过5%','超过10%','超过50%'],ans:2,exp:'A股换手率参考标准：0−1%（清淡）、1−3%（正常）、3−5%（活跃）、5−10%（非常活跃）、超过10%（极度活跃，可能有重大资金动向或配合消息炒作）。科创板/创业板由于股价弹性大，换手率参考标准略高。'},
+      {diff:'进阶',dc:'#ef4444',text:'在上涨趋势末端，股价创新高但换手率却没有同步创新高（换手率顶背离），这通常预示：',opts:['上涨加速，换手率不重要','上涨缺乏新增资金支撑，市场参与度在下降，是见顶预警信号','换手率顶背离没有意义','一定是主力刻意压低换手率'],ans:1,exp:'换手率顶背离：价格创新高但换手率没有同步创新高，说明推动新高的成交量不足，新高是"虚高"。与MACD/RSI顶背离逻辑相同，是见顶预警，结合其他指标背离信号可信度更高。'},
+    ]
+  },
+  {
+    id:'pe', name:'市盈率·估值', tag:'基本面', tagColor:'#f0b429', tagBg:'rgba(240,180,41,.1)',
+    desc:'静态/动态/TTM市盈率、市净率、PEG、估值高低判断',
+    color:'#f0b429', progress:10, total:16,
+    questions:[
+      {diff:'基础',dc:'#22c55e',text:'市盈率（PE）的基本计算公式是：',opts:['PE = 净利润 ÷ 股价','PE = 股价 ÷ 每股收益（EPS）','PE = 市值 ÷ 净资产','PE = 股价 ÷ 每股净资产'],ans:1,exp:'PE（Price-to-Earnings Ratio）= 股价 ÷ 每股收益（EPS）= 总市值 ÷ 净利润。PE代表"按当前盈利水平，多少年能回本"，是最常用的股票估值指标。'},
+      {diff:'基础',dc:'#22c55e',text:'"静态市盈率"使用的是哪个盈利数据？',opts:['预测未来12个月的净利润','上一个完整会计年度（上年全年）的净利润','最近滚动12个月（TTM）的净利润','当季度净利润×4'],ans:1,exp:'静态PE = 总市值 ÷ 上一完整财年净利润。优点：数据确定可靠；缺点：时效性差，对于高成长股可能高估估值（因为用的是过去的盈利）。'},
+      {diff:'基础',dc:'#22c55e',text:'"动态市盈率"使用的是哪个盈利数据？',opts:['上一完整财年净利润','未来12个月预测净利润（分析师预期）','最近滚动12个月净利润','上市至今累计净利润'],ans:1,exp:'动态PE = 总市值 ÷ 未来12个月预测净利润。优点：前瞻性强，更能反映成长预期；缺点：依赖预测，预测可能不准确，高成长股可能被高估。'},
+      {diff:'基础',dc:'#22c55e',text:'"TTM市盈率"中TTM代表什么？',opts:['Total Trading Market','Trailing Twelve Months（最近滚动12个月）','Top Trading Momentum','Time To Market'],ans:1,exp:'TTM = Trailing Twelve Months（最近12个月）。TTM-PE = 总市值 ÷ 最近4个季度净利润之和。是兼顾时效性和确定性的折中指标，是实战中最常用的PE计算方式。'},
+      {diff:'中级',dc:'#f0b429',text:'动态市盈率低于静态市盈率，通常说明：',opts:['公司盈利在下降','公司盈利预期在增长，市场预期未来的利润将高于过去，动态PE更低','两者计算错误','公司在亏损'],ans:1,exp:'动态PE < 静态PE：分子（市值）相同，但动态PE用的未来预期利润更高，所以PE更低。这说明公司被预期将实现盈利增长，是成长型公司的典型特征。'},
+      {diff:'中级',dc:'#f0b429',text:'市净率（PB）的计算公式是：',opts:['PB = 股价 ÷ 每股收益','PB = 股价 ÷ 每股净资产（账面价值）','PB = 净利润 ÷ 净资产','PB = 总市值 ÷ 总资产'],ans:1,exp:'PB（Price-to-Book）= 股价 ÷ 每股净资产 = 总市值 ÷ 净资产。PB=1代表股价等于账面价值，PB<1说明市价低于账面价值（可能低估），PB>1说明市场认为公司有超出账面价值的无形资产或成长潜力。'},
+      {diff:'中级',dc:'#f0b429',text:'以下哪类公司更适合用PB（市净率）而非PE（市盈率）进行估值？',opts:['高成长科技公司','银行、保险等重资产金融类公司，因其净资产规模大且稳定','亏损公司不适合任何估值方法','消费品公司'],ans:1,exp:'银行等金融机构：资产负债表是核心，净资产代表其核心价值，用PB估值更直观。此外，亏损公司PE为负数无意义，也常用PB或PS（市销率）评估价值。'},
+      {diff:'中级',dc:'#f0b429',text:'"PEG指标"的计算公式是：',opts:['PEG = PE ÷ 净利润增长率（%）','PEG = PE + 净利润增长率','PEG = PE × 净利润增长率','PEG = PB ÷ ROE'],ans:0,exp:'PEG = PE ÷ 净利润年增长率（%）。由彼得·林奇提出。PEG=1代表估值合理，PEG<1说明估值低于成长性（可能低估），PEG>2通常被认为估值偏高。PEG适合评估成长股估值是否合理。'},
+      {diff:'中级',dc:'#f0b429',text:'一般来说，A股整体市盈率的合理区间大约是：',opts:['5−10倍','15−30倍','50−100倍','100倍以上'],ans:1,exp:'A股整体合理PE区间约15−25倍（基于历史数据）。成熟蓝筹股通常10−20倍，高成长科技股可到30−60倍甚至更高，银行股通常5−10倍，不同行业PE参考标准差异很大。'},
+      {diff:'进阶',dc:'#ef4444',text:'当一家公司PE极高（如100倍以上）时，以下哪种解读最为合理？',opts:['公司一定被严重高估，立即卖出','PE高可能是：①高成长预期（未来利润将大幅提升）②周期低谷（当期利润极低但非常态）③泡沫。需结合行业、成长性、竞争格局综合判断，不能单独依赖PE','PE高说明公司很好，应该买入','只有PE低于10倍才能买入'],ans:1,exp:'PE本身是一个结果，高PE背后原因不同：①科技成长股高PE可能反映合理的高增长预期（如早期亚马逊）②周期股在利润低谷时PE极高但不代表高估③纯粹泡沫。读懂"为什么PE高"比PE数字本身更重要。'},
+      {diff:'进阶',dc:'#ef4444',text:'使用市盈率估值时，最容易忽视的陷阱是：',opts:['市盈率计算太复杂','盈利质量问题：净利润可能包含大量一次性收益（如资产出售、政府补贴）、会计调整或财务造假，导致PE看似很低但实际高估','PE越低越好，没有陷阱','静态PE没有动态PE好'],ans:1,exp:'PE陷阱：净利润可能被"美化"——通过出售资产、政府补贴、关联方交易虚增利润，导致PE看起来很低。应关注扣非净利润（扣除非经常性损益）和自由现金流，比账面净利润更能反映真实盈利能力。'},
+    ]
+  },
+  {
+    id:'pattern', name:'技术形态', tag:'综合应用', tagColor:'#34d399', tagBg:'rgba(52,211,153,.1)',
+    desc:'头肩顶底、双顶双底、三角形整理、旗形、缺口理论',
+    color:'#34d399', progress:30, total:14,
+    questions:[
+      {diff:'中级',dc:'#f0b429',text:'"头肩顶"形态颈线被有效跌破后：',opts:['是买入信号，可以加仓','看跌确认，理论目标价 = 颈线 − 头部到颈线的高度','必须等待二次回踩颈线','只有成交量放大才有效'],ans:1,exp:'头肩顶确认：跌破颈线（有效：收盘跌破3%以上）。理论跌幅 = 头部最高点到颈线的距离，以颈线为起点向下量取。通常跌破颈线后会有一次回踩（死猫弹），是卖出机会。'},
+      {diff:'中级',dc:'#f0b429',text:'"双底"（W底）形态确认买入的时机是：',opts:['触及第一个底部时','触及第二个底部时','价格有效突破两个底部中间的颈线（高点）时','形成第二个底部的次日'],ans:2,exp:'双底确认：价格有效突破颈线（两底之间的高点），且最好伴随成交量放大。颈线突破前买入是"抢跑"，风险高。理论目标 = 颈线 + 底部到颈线的高度。'},
+      {diff:'中级',dc:'#f0b429',text:'上升三角形（上边水平压力、下边不断抬高）通常预示：',opts:['看跌反转形态，应该做空','看涨持续形态，向上突破水平压力线的概率更大，放量突破确认','必然下跌破位','震荡整理，没有方向'],ans:1,exp:'上升三角形：买方持续提高出价（下边线抬升），遭遇固定卖压（上边线水平）。随着买方积累，最终大概率向上突破。放量突破水平压力线是做多信号。'},
+      {diff:'中级',dc:'#f0b429',text:'"旗形整理"（上涨后的平行通道式回调）完成后，通常：',opts:['下跌趋势开始','旗形是趋势持续形态，突破旗形上沿后，价格通常恢复原来的上涨趋势，目标位约等于"旗杆"高度','趋势反转向下','必须等待5天才能确认'],ans:1,exp:'旗形是趋势中的短暂整理：急速上涨（旗杆）→斜向下的平行通道整理（旗面）→再次向上突破旗形上沿（继续上涨）。理论目标 = 突破点 + 旗杆长度。是可靠的持续形态。'},
+      {diff:'进阶',dc:'#ef4444',text:'"圆弧底"形态的特征和含义是：',opts:['快速V形反弹，短线机会','价格缓慢弧形下跌后弧形回升，成交量呈碗形（先缩后放），是长期筑底后的强力买入信号','与其他底部形态相同','圆弧底只在周线有效'],ans:1,exp:'圆弧底（碗形底）：价格经历漫长的弧形下跌和弧形回升，成交量配合同样呈碗形（底部缩量，右侧放量）。形成时间越长（3−6个月以上），后续上涨的力度通常越强，是机构资金长期建仓的痕迹。'},
+    ]
+  },
+  {
+    id:'advanced', name:'综合实战', tag:'高阶应用', tagColor:'#f87171', tagBg:'rgba(248,113,113,.1)',
+    desc:'多指标共振、止损策略、仓位管理、市场情绪判断',
+    color:'#f87171', progress:8, total:12,
+    questions:[
+      {diff:'进阶',dc:'#ef4444',text:'止损的核心意义是：',opts:['承认自己判断失误，是软弱的表现','控制单次亏损在可接受范围内，保留本金和交易资格，是职业交易者最重要的技能','止损会导致损失更多','只有新手才需要止损'],ans:1,exp:'止损是主动防御：在判断失误时主动认错，将损失控制在预设范围内（如5%−8%）。"保留本金"比"不认错"更重要，因为亏损20%需要盈利25%才能回本，亏损50%需盈利100%才能回本。'},
+      {diff:'进阶',dc:'#ef4444',text:'多指标共振买入信号是指：',opts:['使用越多指标越好','MACD金叉+KDJ低位金叉+价格突破均线+成交量放大同时出现，多个信号共同指向，胜率显著提高','只用一个指标就够了','指标越多越容易产生矛盾'],ans:1,exp:'多指标共振：当MACD、KDJ、均线、量能等多个不同类型的指标同时发出相同方向信号时，胜率大幅提升。不同指标反映不同维度：趋势（均线）+动能（MACD）+超买超卖（KDJ）+资金（量能）共振最强。'},
+      {diff:'进阶',dc:'#ef4444',text:'"仓位管理"中，单只股票的仓位上限通常建议不超过：',opts:['100%（全仓）','50%（半仓）','总资金的20−30%','没有限制，根据感觉决定'],ans:2,exp:'职业交易者通常将单只股票仓位控制在总资金的10−30%，分散风险。全仓单只股票虽然可能大赚，但一旦判断错误损失极大。"不要把所有鸡蛋放在一个篮子里"是基础的风险管理原则。'},
+      {diff:'进阶',dc:'#ef4444',text:'A股"T+1"交易制度意味着：',opts:['当天买入可以当天卖出','当天买入的股票，最早到次日才能卖出','需要持有一年才能卖出','只有大盘股才有T+1限制'],ans:1,exp:'A股T+1制度：今天买入的股票，最早明天才能卖出（但当天卖出的股票，资金当天可以使用，即卖出T+0）。这与美股T+0不同，是A股特有的制度，短线操作需特别注意。'},
+    ]
+  }
+];
+
+
+let currentUser=null,currentModule=null,currentQIdx=0,qCorrect=0,qWrong=0,qAnswered=false;
+let sm2={ef:2.5,interval:1,reps:0};
+let wrongFilter='all',countdownTimer=null;
+
+const WRONG_DATA=[
+  {cat:'macd',q:'MACD顶背离出现后应该如何操作？',times:3,answer:'顶背离是见顶预警，上涨动能衰减，应警惕减仓，不可继续追高买入。'},
+  {cat:'kdj',q:'KDJ在20以下低位发生金叉时代表什么信号？',times:2,answer:'低位金叉是超卖区域买入参考信号，下跌动能减弱，多头开始反攻。'},
+  {cat:'boll',q:'布林带收口后通常会发生什么？',times:4,answer:'带宽收窄代表波动率降低，蓄势结束后通常出现方向性的大幅突破行情。'},
+  {cat:'macd',q:'MACD零轴以上金叉和零轴以下金叉，哪个参考价值更高？',times:2,answer:'零轴以上金叉，代表大趋势是多头格局中的回调买点，可信度更高。'},
+  {cat:'weibo',q:'委比为负值说明什么？',times:2,answer:'委卖挂单多于委买挂单，卖盘压力大于买盘意愿，短期偏空。'},
+  {cat:'weibo',q:'"外盘"代表什么？',times:3,answer:'外盘是以卖方挂单价成交的主动买入，外盘大说明买方积极追涨。'},
+  {cat:'turnover',q:'换手率的计算公式是什么？',times:2,answer:'换手率 = 当日成交量 ÷ 流通股本 × 100%，注意是流通股本而非总股本。'},
+  {cat:'turnover',q:'高位放量滞涨是什么信号？',times:4,answer:'主力出货信号，大量卖盘被买盘对冲，价格推不上去，需高度警惕。'},
+  {cat:'pe',q:'动态市盈率和静态市盈率的主要区别是什么？',times:2,answer:'静态PE用上一完整财年利润，动态PE用未来12个月预测利润，动态更具前瞻性但依赖预测。'},
+  {cat:'pe',q:'TTM市盈率代表什么？',times:1,answer:'TTM = Trailing Twelve Months，用最近滚动12个月（最近4个季度）净利润计算的市盈率。'},
+  {cat:'pe',q:'PEG指标如何计算，PEG小于1说明什么？',times:3,answer:'PEG = PE ÷ 净利润增长率（%），PEG<1说明估值低于成长性，可能存在低估。'},
+  {cat:'ma',q:'葛兰碧均线第三买点是什么情形？',times:2,answer:'上升趋势中，价格回调接近均线但未跌破，再次向上是买入机会（回踩均线确认支撑）。'},
+  {cat:'kline',q:'"黄昏之星"与"早晨之星"的关系是什么？',times:1,answer:'互为镜像：黄昏之星（大阳→星→大阴）是顶部反转信号，早晨之星是底部反转信号。'},
+  {cat:'volume',q:'"价涨量缩"意味着什么？',times:3,answer:'价格上涨缺乏成交量支撑，是虚涨信号，持续性差，随时可能回落，是危险的量价背离。'},
+  {cat:'rsi',q:'RSI顶背离最有效的条件是什么？',times:2,answer:'RSI在超买区（70以上）且出现背离，配合K线顶部形态时参考价值最高。'},
+];
+
+const POSTS=[
+  {avatar:'炒',ac:'#f0b429',ab:'rgba(240,180,41,.15)',author:'炒股老鸟',time:'10分钟前',tag:'MACD',tc:'#f0b429',tb:'rgba(240,180,41,.1)',content:'今天沪指MACD零轴上方再次金叉，同时成交量温和放大，委比也维持正值+18%。多指标共振，短期偏多。大家留意3350一线压力，突破有效才算确认。',likes:34,comments:11,shares:4},
+  {avatar:'新',ac:'#60a5fa',ab:'rgba(96,165,250,.15)',author:'新手小白',time:'28分钟前',tag:'问答',tc:'#a78bfa',tb:'rgba(167,139,250,.1)',content:'请问换手率2%和换手率15%，哪个更值得关注？两者代表什么不同含义？学了换手率模块但还是有点混乱...',likes:18,comments:15,shares:2},
+  {avatar:'量',ac:'#fb923c',ab:'rgba(251,146,60,.15)',author:'量价研究员',time:'1小时前',tag:'量价',tc:'#f87171',tb:'rgba(248,113,113,.1)',content:'实战分享：某股今日出现"天量滞涨"——成交量创近3个月新高，但收盘只涨了0.3%。这是教科书级的主力出货信号。结合KDJ高位死叉和MACD柱子缩短，果断清仓，不贪这最后一口肉。',likes:56,comments:22,shares:14},
+  {avatar:'估',ac:'#34d399',ab:'rgba(52,211,153,.15)',author:'基本面学员',time:'2小时前',tag:'市盈率',tc:'#f0b429',tb:'rgba(240,180,41,.1)',content:'刚学完市盈率模块，终于搞清楚静态、动态、TTM三种PE的区别了！以前总是混淆。动态PE用的是预测利润，所以成长股动态PE会低于静态PE，这才是正确的理解方式。感谢这个题库！',likes:42,comments:9,shares:7},
+  {avatar:'委',ac:'#38bdf8',ab:'rgba(56,189,248,.15)',author:'盘口分析师',time:'3小时前',tag:'委比',tc:'#38bdf8',tb:'rgba(56,189,248,.1)',content:'委比和内外盘配合使用才有意义：委比+25%+外盘持续大于内盘→资金积极做多，可以关注。但如果委比虽然是正值，但外盘大的同时价格却不涨，要注意上方隐藏卖压。不要单独看委比！',likes:39,comments:13,shares:8},
+];
+
+const HOT_TOPICS=['委比正负值如何指导短线操作','换手率多少才算主力活跃','动态市盈率与静态市盈率怎么选','MACD多周期共振实战技巧','内外盘数据如何解读主力意图'];
+const LBOARD=[{n:'量价研究员',s:1580},{n:'炒股老鸟',s:1340},{n:'基本面学员',s:1120},{n:'盘口分析师',s:960},{n:'委比研究者',s:780}];
+
+function sendCode(){
+  const p=document.getElementById('phoneInput').value.trim();
+  if(p.length<11){showToast('请输入正确的手机号');return;}
+  const b=document.getElementById('sendBtn');
+  b.disabled=true;showToast('验证码已发送（Demo：输入任意6位）');
+  let s=60;b.textContent=s+'s';
+  clearInterval(countdownTimer);
+  countdownTimer=setInterval(()=>{s--;b.textContent=s>0?s+'s':'重新发送';if(s<=0){clearInterval(countdownTimer);b.disabled=false;}},1000);
+}
+
+function doLogin(){
+  const p=document.getElementById('phoneInput').value.trim();
+  const c=document.getElementById('codeInput').value.trim();
+  if(p.length<11){showToast('请输入正确的手机号');return;}
+  if(c.length<4){showToast('请输入验证码');return;}
+  currentUser={phone:p,name:p.slice(0,3)+'****'+p.slice(-2),avatar:p.slice(-2)};
+  document.getElementById('authOverlay').style.display='none';
+  document.getElementById('navPhone').textContent=currentUser.name;
+  document.getElementById('navAvatar').textContent=currentUser.avatar;
+  document.getElementById('composeAvatar').textContent=currentUser.avatar;
+  showToast('登录成功，欢迎回来！');
+}
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const t=document.getElementById('tab-'+name);if(t)t.classList.add('active');
+  if(name==='stats'){renderCats();renderHeatmap();}
+  if(name==='wrong')renderWrong();
+  if(name==='community')renderCommunity();
+}
+
+function initHome(){
+  const d=new Date();
+  document.getElementById('marketDate').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 · 盘后参考';
+  const total=MODULES.reduce((a,m)=>a+m.questions.length,0);
+  document.getElementById('totalQCount').textContent=total;
+  document.getElementById('modulesGrid').innerHTML=MODULES.map(m=>`
+    <div class="module-card fade-up" onclick="startModule('${m.id}')">
+      <div class="module-tag" style="color:${m.tagColor};background:${m.tagBg};border:1px solid ${m.tagColor}33;">${m.tag}</div>
+      <div class="module-name">${m.name}</div>
+      <div class="module-desc">${m.desc}</div>
+      <div class="module-meta">
+        <span class="module-count">${m.questions.length} 题</span>
+        <span class="module-progress" style="color:${m.color}">${m.progress}% 掌握</span>
+      </div>
+      <div class="module-bar"><div class="module-bar-fill" style="width:${m.progress}%;background:${m.color}"></div></div>
+    </div>`).join('');
+}
+
+function startModule(id){
+  currentModule=MODULES.find(m=>m.id===id);
+  if(!currentModule)return;
+  currentQIdx=0;qCorrect=0;qWrong=0;sm2={ef:2.5,interval:1,reps:0};
+  document.getElementById('quizModTitle').textContent=currentModule.name;
+  document.getElementById('quizModDesc').textContent=currentModule.desc;
+  document.getElementById('quizMain').style.display='block';
+  document.getElementById('completeWrap').style.display='none';
+  showPage('quiz');renderQ();
+}
+
+function renderQ(){
+  const qs=currentModule.questions;
+  if(currentQIdx>=qs.length){showComplete();return;}
+  const q=qs[currentQIdx];
+  const pct=(currentQIdx/qs.length)*100;
+  document.getElementById('qProgFill').style.width=pct+'%';
+  document.getElementById('qCnt').textContent=currentQIdx+'/'+qs.length;
+  document.getElementById('efVal').textContent=sm2.ef.toFixed(2);
+  document.getElementById('ivVal').textContent=sm2.interval;
+  document.getElementById('repVal').textContent=sm2.reps;
+  document.getElementById('qDiff').innerHTML=`<span class="diff-dot" style="background:${q.dc}"></span><span style="font-size:11px;color:${q.dc};font-weight:500;">${q.diff}</span>`;
+  document.getElementById('qText').textContent=q.text;
+  const ce=document.getElementById('qChart');
+  if(q.chart){ce.style.display='block';renderMiniChart(q.chart);}else ce.style.display='none';
+  const labels=['A','B','C','D'];
+  document.getElementById('optsWrap').innerHTML=q.opts.map((o,i)=>`<button class="opt-btn" onclick="pickAns(${i})"><span class="opt-label">${labels[i]}</span><span class="opt-text">${o}</span></button>`).join('');
+  document.getElementById('fbBox').style.display='none';
+  document.getElementById('fbBox').className='feedback-box';
+  document.getElementById('nextBtn').style.display='none';
+  qAnswered=false;
+}
+
+const CHARTS={
+  macd_basic:{v:[10,14,18,22,18,12,8,4,2,6,12,18,22,20],c:['#60a5fa','#60a5fa','#60a5fa','#60a5fa','#60a5fa','#60a5fa','#f0b429','#f87171','#f87171','#34d399','#34d399','#34d399','#34d399','#34d399']},
+  macd_golden:{v:[20,24,22,18,14,10,7,5,4,8,14,20,26,30],c:['#f87171','#f87171','#f87171','#f87171','#f87171','#f87171','#f87171','#f0b429','#f0b429','#34d399','#34d399','#34d399','#34d399','#34d399']},
+  kdj_low:{v:[40,36,30,24,18,14,10,8,6,8,12,18,24,28],c:['#f87171','#f87171','#f87171','#f87171','#f87171','#f87171','#f87171','#f0b429','#f0b429','#34d399','#34d399','#34d399','#34d399','#34d399']},
+  boll_basic:{v:[20,22,25,28,30,28,26,24,22,24,26,28,32,36],c:['#60a5fa','#60a5fa','#60a5fa','#a78bfa','#a78bfa','#a78bfa','#a78bfa','#a78bfa','#a78bfa','#60a5fa','#60a5fa','#60a5fa','#34d399','#34d399']},
+};
+function renderMiniChart(type){
+  const c=CHARTS[type]||CHARTS.macd_basic;
+  document.getElementById('miniChart').innerHTML=c.v.map((v,i)=>`<div class="mini-bar" style="height:${v}px;background:${c.c[i]};"></div>`).join('');
+}
+
+function pickAns(idx){
+  if(qAnswered)return;qAnswered=true;
+  const q=currentModule.questions[currentQIdx];
+  const btns=document.querySelectorAll('.opt-btn');
+  btns.forEach(b=>b.disabled=true);
+  const correct=idx===q.ans;
+  btns[idx].classList.add(correct?'correct':'wrong');
+  if(!correct)btns[q.ans].classList.add('correct');
+  if(correct){qCorrect++;if(sm2.reps===0)sm2.interval=1;else if(sm2.reps===1)sm2.interval=6;else sm2.interval=Math.round(sm2.interval*sm2.ef);sm2.ef=Math.min(3.0,sm2.ef+0.1);sm2.reps++;}
+  else{qWrong++;sm2.interval=1;sm2.ef=Math.max(1.3,sm2.ef-0.2);sm2.reps=0;}
+  document.getElementById('efVal').textContent=sm2.ef.toFixed(2);
+  document.getElementById('ivVal').textContent=sm2.interval;
+  document.getElementById('repVal').textContent=sm2.reps;
+  const fb=document.getElementById('fbBox');
+  fb.style.display='block';fb.className='feedback-box '+(correct?'correct':'wrong');
+  document.getElementById('fbTitle').textContent=correct?'✓ 回答正确！':'✗ 回答错误';
+  document.getElementById('fbText').textContent=q.exp;
+  setTimeout(()=>{const nb=document.getElementById('nextBtn');nb.style.display='block';nb.classList.add('pop');},300);
+}
+
+function nextQ(){currentQIdx++;renderQ();}
+
+function showComplete(){
+  document.getElementById('quizMain').style.display='none';
+  document.getElementById('completeWrap').style.display='block';
+  const total=currentModule.questions.length;
+  const acc=total>0?Math.round(qCorrect/total*100):0;
+  document.getElementById('csC').textContent=qCorrect;
+  document.getElementById('csW').textContent=qWrong;
+  document.getElementById('csA').textContent=acc+'%';
+  document.getElementById('completeSubText').textContent='完成《'+currentModule.name+'》全部'+total+'道题。SM-2已记录，将在'+sm2.interval+'天后安排复习。';
+  document.getElementById('qProgFill').style.width='100%';
+  document.getElementById('qCnt').textContent=total+'/'+total;
+}
+
+function restartQ(){currentQIdx=0;qCorrect=0;qWrong=0;sm2={ef:2.5,interval:1,reps:0};document.getElementById('quizMain').style.display='block';document.getElementById('completeWrap').style.display='none';renderQ();}
+
+function renderCats(){
+  document.getElementById('catList').innerHTML=MODULES.map(m=>`<div class="cat-row"><div class="cat-row-top"><span class="cat-name">${m.name}</span><span style="display:flex;gap:8px;align-items:center;"><span style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;">${m.questions.length}题</span><span class="cat-pct">${m.progress}%</span></span></div><div class="cat-bar-bg"><div class="cat-bar-fill" style="width:${m.progress}%;background:${m.color}"></div></div></div>`).join('');
+}
+
+function renderHeatmap(){
+  const lv=Array.from({length:60},(_,i)=>{const r=Math.random();if(i%7===0||i%7===6)return 0;return r<0.2?0:Math.ceil(r*4);});
+  document.getElementById('heatmap').innerHTML=lv.map(l=>`<div class="hm-cell${l>0?' hm-d'+Math.min(l,4):''}"></div>`).join('');
+}
+
+function renderCommunity(){
+  document.getElementById('postList').innerHTML=POSTS.map(p=>`<div class="post-card"><div class="post-top"><div class="post-avatar" style="background:${p.ab};color:${p.ac};">${p.avatar}</div><div class="post-meta"><div class="post-author">${p.author}</div><div class="post-time">${p.time}</div></div><span class="post-tag" style="color:${p.tc};background:${p.tb};border:1px solid ${p.tc}33;">${p.tag}</span></div><div class="post-content">${p.content.replace(/\n/g,'<br>')}</div><div class="post-bottom"><span class="post-action" onclick="likePost(this)">♥ ${p.likes}</span><span class="post-action">💬 ${p.comments}</span><span class="post-action">↗ ${p.shares}</span></div></div>`).join('');
+  document.getElementById('hotTopics').innerHTML=HOT_TOPICS.map((t,i)=>`<div class="hot-topic"><span class="hot-num ${i<3?'top':''}">${i+1}</span><span class="hot-text">${t}</span></div>`).join('');
+  document.getElementById('leaderboard').innerHTML=LBOARD.map((l,i)=>`<div class="leaderboard-row"><span class="lb-rank ${i===0?'g':''}">${i===0?'★':i+1}</span><div class="lb-avatar" style="background:${['rgba(240,180,41,.15)','rgba(96,165,250,.15)','rgba(251,146,60,.15)','rgba(167,139,250,.15)','rgba(52,211,153,.15)'][i]};color:${['#f0b429','#60a5fa','#fb923c','#a78bfa','#34d399'][i]};">${l.n[0]}</div><span class="lb-name">${l.n}</span><span class="lb-score">${l.s}分</span></div>`).join('');
+}
+
+function addTag(tag){const e=document.getElementById('composeInput');e.value=(e.value+' '+tag).trim()+' ';e.focus();}
+
+function submitPost(){
+  const txt=document.getElementById('composeInput').value.trim();
+  if(!txt){showToast('请输入内容后再发布');return;}
+  POSTS.unshift({avatar:currentUser?currentUser.avatar:'我',ac:'#f0b429',ab:'rgba(240,180,41,.15)',author:currentUser?currentUser.name:'匿名用户',time:'刚刚',tag:'分享',tc:'#34d399',tb:'rgba(52,211,153,.1)',content:txt,likes:0,comments:0,shares:0});
+  document.getElementById('composeInput').value='';renderCommunity();showToast('发布成功！');
+}
+
+function likePost(el){const n=parseInt(el.textContent.replace('♥ ',''))+1;el.textContent='♥ '+n;el.style.color='var(--red)';}
+
+function renderWrong(){
+  const cats=['all','macd','kdj','boll','ma','weibo','turnover','pe','rsi','volume','kline','pattern'];
+  const labels={all:'全部',macd:'MACD',kdj:'KDJ',boll:'BOLL',ma:'均线',weibo:'委比',turnover:'换手率',pe:'市盈率',rsi:'RSI',volume:'量价',kline:'K线',pattern:'形态'};
+  const counts={};cats.forEach(f=>{counts[f]=f==='all'?WRONG_DATA.length:WRONG_DATA.filter(w=>w.cat===f).length;});
+  document.getElementById('wrongFilters').innerHTML=cats.filter(f=>counts[f]>0).map(f=>`<button class="filter-btn ${wrongFilter===f?'active':''}" onclick="setWF('${f}',this)">${labels[f]}(${counts[f]})</button>`).join('');
+  const filtered=wrongFilter==='all'?WRONG_DATA:WRONG_DATA.filter(w=>w.cat===wrongFilter);
+  document.getElementById('wrongCount').textContent=filtered.length;
+  document.getElementById('wrongList').innerHTML=filtered.map(w=>`<div class="wrong-item" onclick="toggleWrong(this)"><div class="wrong-top"><div class="wrong-q">${w.q}</div><div class="wrong-right"><span class="wrong-badge">错误 ${w.times} 次</span><span class="wrong-next">明天复习</span></div></div><div class="wrong-answer">✓ ${w.answer}</div></div>`).join('');
+}
+
+function setWF(f,el){wrongFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderWrong();}
+function toggleWrong(el){const a=el.querySelector('.wrong-answer');a.style.display=a.style.display==='block'?'none':'block';}
+
+let toastTimer;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);}
+
+initHome();
+</script>
+</body>
+</html>
